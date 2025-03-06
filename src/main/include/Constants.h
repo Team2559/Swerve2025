@@ -34,8 +34,8 @@ namespace DriveConstants {
 
   // Zero positions for the steer of the swerve modules
   inline constexpr units::degree_t kFrontLeftSteerOffset  = 17.2_deg;
-  inline constexpr units::degree_t kFrontRightSteerOffset = 325.6_deg;
-  inline constexpr units::degree_t kRearLeftSteerOffset   = 89.2_deg;
+  inline constexpr units::degree_t kFrontRightSteerOffset = 89.2_deg;
+  inline constexpr units::degree_t kRearLeftSteerOffset   = 325.6_deg;
   inline constexpr units::degree_t kRearRightSteerOffset  = 244.4_deg;
 
   // SDS Mk3 Standard (or Fast) Gear Ratio: 8.16:1 (or 6.86:1);
@@ -51,12 +51,12 @@ namespace DriveConstants {
   // SDS Mk4n L1, L2, L3 Gear Ratio: 7.13:1, 5.90:1, 5.36:1
   // Nominal Wheel Diameter (4"): =0.1016m;
   // Nominal Wheel Circumference (pi * Diameter): ~0.3192m;
-  // 5.36 / 0.3192 => ~16.79.
+  // 0.3192 / 5.90 => ~0.05401.
 
   // This should be empirically determined!  This is just an initial guess.
   // This is used for both distance and velocity control. If this is off, it
   // will throw off kMaxDriveSpeed and kMaxTurnRate, as well as drive values.
-  inline constexpr units::meter_t kDriveDistancePerRotation = 1.0_m / 16.79;
+  inline constexpr units::meter_t kDriveDistancePerRotation = 54.01_mm;
 
   // SDS Mk3 Standard (or Fast) Max Free Speed: 12.1 (or 14.4) feet/second;
   // Review your motor and swerve module configuration for nominal free speed
@@ -64,7 +64,7 @@ namespace DriveConstants {
   // measured. Half of theoretical free speed is a reasonable starting value
   // (since something in the ballpark is needed here in order to to drive).
   constexpr units::meters_per_second_t kMaxDriveSpeed = 22.1_fps / 2.0;
-  constexpr double kSlowDrivePercent = 0.25;
+  constexpr double kSlowDrivePercent = 0.50;
 
   // This is used for rotating the robot in place, about it's center.  This
   // may need to be empirically adjusted, but check kDriveMetersPerRotation
@@ -90,12 +90,12 @@ namespace DriveConstants {
   // CAN ID assignments.
   constexpr int kFrontLeftDriveMotorCanID = 1;
   constexpr int kFrontLeftSteerMotorCanID = 2;
-  constexpr int kFrontRightDriveMotorCanID = 3;
-  constexpr int kFrontRightSteerMotorCanID = 4;
+  constexpr int kRearLeftDriveMotorCanID = 3;
+  constexpr int kRearLeftSteerMotorCanID = 4;
   constexpr int kRearRightDriveMotorCanID = 5;
   constexpr int kRearRightSteerMotorCanID = 6;
-  constexpr int kRearLeftDriveMotorCanID = 7;
-  constexpr int kRearLeftSteerMotorCanID = 8;
+  constexpr int kFrontRightDriveMotorCanID = 7;
+  constexpr int kFrontRightSteerMotorCanID = 8;
   
   // These can flip because of gearing.
   constexpr bool kDriveMotorInverted = false;
