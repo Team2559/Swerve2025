@@ -26,6 +26,11 @@ namespace OperatorConstants {
 
 }
 
+namespace MotorConstants {
+  // Speed constant for a Neo Vortex, in turns per second per volt
+  constexpr units::unit_t<units::compound_unit<units::turns_per_second, units::inverse<units::volt>>> kVNeoVortex = 565.0_rpm / 1.0_V;
+}
+
 namespace DriveConstants {
   // Drivebase geometry: distance between centers of right and left wheels on
   // robot; distance between centers of front and back wheels on robot.
@@ -56,7 +61,7 @@ namespace DriveConstants {
   // This should be empirically determined!  This is just an initial guess.
   // This is used for both distance and velocity control. If this is off, it
   // will throw off kMaxDriveSpeed and kMaxTurnRate, as well as drive values.
-  inline constexpr units::meter_t kDriveDistancePerRotation = 54.01_mm;
+  inline constexpr units::unit_t<units::compound_unit<units::meter, units::inverse<units::turn>>> kDriveDistancePerRotation = 54.01_mm / units::turn_t{1};
 
   // SDS Mk3 Standard (or Fast) Max Free Speed: 12.1 (or 14.4) feet/second;
   // Review your motor and swerve module configuration for nominal free speed
@@ -107,7 +112,7 @@ namespace DriveConstants {
     constexpr double kP = 0.000;
     constexpr double kI = 0.0;
     constexpr double kD = 0.0;
-    constexpr double kFF = (1.0 / ((565.0_rpm).convert<units::turns_per_second>() / 1.0_V) / kDriveDistancePerRotation).value();
+    constexpr double kFF = (1.0 / MotorConstants::kVNeoVortex / kDriveDistancePerRotation).value();
   }
 
   // Steer encoder units are scaled for more responsive PID feedback
