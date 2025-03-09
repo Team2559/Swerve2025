@@ -31,7 +31,7 @@ RobotContainer::RobotContainer() {
     .WithProperties({ // specify widget properties here
       {"min", nt::Value::MakeDouble(0.0)},
       {"max", nt::Value::MakeDouble(1.0)}
-   })
+    })
     .GetEntry();
 }
 
