@@ -96,6 +96,10 @@ void RevSwerveModule::SetDrivePercent(double percent) {
   driveMotor.Set(percent);
 }
 
+void RevSwerveModule::StopDrive() {
+  driveMotor.StopMotor();
+}
+
 const frc::SwerveModuleState RevSwerveModule::GetState() {
   return {units::velocity::meters_per_second_t{driveEncoder.GetVelocity()}, GetSteerPosition()};
 }

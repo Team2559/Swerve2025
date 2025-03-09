@@ -102,6 +102,13 @@ void DriveSubsystem::SteerTo(units::meters_per_second_t xSpeed,
   ), true);
 }
 
+void DriveSubsystem::Stop() {
+  frontLeftModule->Stop();
+  frontRightModule->Stop();
+  rearLeftModule->Stop();
+  rearRightModule->Stop();
+}
+
 const std::array<frc::SwerveModulePosition, 4> DriveSubsystem::GetModulePositions()
 {
   return {
