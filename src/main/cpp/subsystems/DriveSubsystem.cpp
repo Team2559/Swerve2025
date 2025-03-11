@@ -58,6 +58,11 @@ void DriveSubsystem::Periodic() {
   nt_yPosition->SetDouble(pose.Y().value());
   nt_rPosition->SetDouble(pose.Rotation().Radians().value());
 
+  frc::SmartDashboard::PutNumber("Front left drive", frontLeftModule->GetPosition().distance.value());
+  frc::SmartDashboard::PutNumber("Front right drive", frontRightModule->GetPosition().distance.value());
+  frc::SmartDashboard::PutNumber("Rear left drive", rearLeftModule->GetPosition().distance.value());
+  frc::SmartDashboard::PutNumber("Rear right drive", rearRightModule->GetPosition().distance.value());
+
   frc::SmartDashboard::PutNumber("Front left steer", frontLeftModule->GetSteerPosition().convert<units::deg>().value());
   frc::SmartDashboard::PutNumber("Front right steer", frontRightModule->GetSteerPosition().convert<units::deg>().value());
   frc::SmartDashboard::PutNumber("Rear left steer", rearLeftModule->GetSteerPosition().convert<units::deg>().value());
