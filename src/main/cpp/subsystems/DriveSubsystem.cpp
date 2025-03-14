@@ -2,6 +2,7 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <frc2/command/button/RobotModeTriggers.h>
 #include <frc2/command/InstantCommand.h>
+#include <frc2/command/RunCommand.h>
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
@@ -55,7 +56,12 @@ DriveSubsystem::DriveSubsystem() :
 
   // Bind test init and test exit to mode transition
   frc2::RobotModeTriggers::Test()
-    .OnTrue(frc2::InstantCommand([this]() -> void {TestInit();}).ToPtr())
+    .OnTrue(frc2::InstantCommand([this]() -> void {TestInit();}).AndThen(frc2::RunCommand([this]() -> void {
+      frontLeftModule->TestDebug();
+      frontRightModule->TestDebug();
+      rearLeftModule->TestDebug();
+      rearRightModule->TestDebug();
+    }).WithTimeout(1.0_s)))
     .OnFalse(frc2::InstantCommand([this]() -> void {TestExit();}).ToPtr());
 }
 
@@ -100,6 +106,9 @@ void DriveSubsystem::TestInit() {
 
   driveSetupTab.Add("PID", m_driveTuner).WithWidget(frc::BuiltInWidgets::kPIDController);
   steerSetupTab.Add("PID", m_steerTuner).WithWidget(frc::BuiltInWidgets::kPIDController);
+
+  driveSetupTab.Add("Legend", "(Blue) setpoint, (Red) measured, (Green) output");
+  steerSetupTab.Add("Legend", "(Blue) setpoint, (Red) measured, (Green) output");
 
   frontLeftModule->TestInit("Front left");
   frontRightModule->TestInit("Front right");

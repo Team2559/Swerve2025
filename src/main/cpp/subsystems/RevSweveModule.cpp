@@ -70,6 +70,12 @@ void RevSwerveModule::TestExit() {
   nt_steerOutput = {};
 }
 
+void RevSwerveModule::TestDebug() {
+  if (nt_driveOutput.has_value()) {
+    nt_driveOutput.value()->SetDoubleArray(std::array{1.0, 2.0, 3.0});
+  }
+}
+
 inline void BuildPIDConfig(SparkFlexConfig &config, const PIDUpdate &update) {
   ClosedLoopSlot slot;
   switch (update.slot) {

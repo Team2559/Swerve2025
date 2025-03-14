@@ -14,6 +14,7 @@ class RevSwerveModule: public SwerveModule {
   // Test Methods
   void TestInit(std::string name) override;
   void TestExit() override;
+  void TestDebug() override;
 
   // Live PID tuning
   void UpdateDrivePID(PIDUpdate &update) override;
@@ -44,6 +45,8 @@ class RevSwerveModule: public SwerveModule {
   SparkRelativeEncoder driveEncoder;
   SparkAbsoluteEncoder steerEncoder;
 
+  std::optional<nt::GenericEntry*> nt_driveSetpoint = {};
+  std::optional<nt::GenericEntry*> nt_driveMeasurement = {};
   std::optional<nt::GenericEntry*> nt_driveOutput = {};
   std::optional<nt::GenericEntry*> nt_steerOutput = {};
 };

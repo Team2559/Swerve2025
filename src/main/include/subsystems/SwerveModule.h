@@ -17,6 +17,7 @@ class SwerveModule {
   // Test Methods
   virtual void TestInit(std::string name) = 0;
   virtual void TestExit() = 0;
+  virtual void TestDebug() = 0;
 
   // Live PID tuning
   virtual void UpdateDrivePID(PIDUpdate &update) = 0;
