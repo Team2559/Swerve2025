@@ -11,8 +11,13 @@ class RevSwerveModule: public SwerveModule {
   // Initializers
   RevSwerveModule(int driveCanID, int steerCanID, units::angle::turn_t offset);
 
-  // Called every loop
-  void Periodic() override;
+  // Test Methods
+  void TestInit(std::string name) override;
+  void TestExit() override;
+
+  // Live PID tuning
+  void UpdateDrivePID(PIDUpdate &update) override;
+  void UpdateSteerPID(PIDUpdate &update) override;
 
   // Is the swerve module in a "healthy" state?
   bool GetStatus() const override;
@@ -38,4 +43,7 @@ class RevSwerveModule: public SwerveModule {
 
   SparkRelativeEncoder driveEncoder;
   SparkAbsoluteEncoder steerEncoder;
+
+  std::optional<nt::GenericEntry*> nt_driveOutput = {};
+  std::optional<nt::GenericEntry*> nt_steerOutput = {};
 };

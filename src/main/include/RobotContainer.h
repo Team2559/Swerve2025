@@ -28,7 +28,7 @@ class RobotContainer {
   frc2::CommandXboxController m_driverController{
       OperatorConstants::kDriverControllerPort};
 
-  nt::GenericEntry* fastDriveSpeedEntry;
+  nt::GenericEntry* nt_fastDriveSpeed;
 
   bool m_fieldOriented = true;
   bool m_triggerSpeedEnabled = false;

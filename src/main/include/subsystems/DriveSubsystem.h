@@ -16,6 +16,7 @@
 #include <units/velocity.h>
 #include <units/angular_velocity.h>
 
+#include "PIDTuner.h"
 #include "SwerveModule.h"
 
 class DriveSubsystem : public frc2::SubsystemBase {
@@ -35,6 +36,9 @@ class DriveSubsystem : public frc2::SubsystemBase {
    * simulation.
    */
   void SimulationPeriodic() override;
+
+  void TestInit();
+  void TestExit();
 
   void ResetFieldOrientation();
 
@@ -88,6 +92,9 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   // Pose estimator combines odometry with vision readings to yield an accurate robot pose; 4 specifies the number of modules.
   std::unique_ptr<frc::SwerveDrivePoseEstimator<4>> m_poseEstimator;
+
+  PIDTuner m_driveTuner;
+  PIDTuner m_steerTuner;
 
   nt::GenericEntry *nt_xPosition;
   nt::GenericEntry *nt_xSetpoint;

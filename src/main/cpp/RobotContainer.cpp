@@ -26,7 +26,7 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureBindings();
 
-  fastDriveSpeedEntry = frc::Shuffleboard::GetTab("Drive")
+  nt_fastDriveSpeed = frc::Shuffleboard::GetTab("Drive")
     .Add("Max Speed", 1.0)
     .WithWidget(frc::BuiltInWidgets::kNumberSlider)
     .WithProperties({ // specify widget properties here
@@ -97,7 +97,7 @@ std::tuple<double, double, double, bool> RobotContainer::GetDriveTeleopControls(
     LeftStickX *= DriveConstants::kSlowDrivePercent;
     LeftStickY *= DriveConstants::kSlowDrivePercent;
   } else {
-    double fastDrivePercent = fastDriveSpeedEntry->GetDouble(1.0);
+    double fastDrivePercent = nt_fastDriveSpeed->GetDouble(1.0);
     LeftStickX *= fastDrivePercent;
     LeftStickY *= fastDrivePercent;
   }

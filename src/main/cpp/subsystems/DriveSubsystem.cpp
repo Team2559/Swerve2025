@@ -1,5 +1,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h>
+#include <frc2/command/button/RobotModeTriggers.h>
+#include <frc2/command/InstantCommand.h>
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
@@ -12,7 +14,19 @@ DriveSubsystem::DriveSubsystem() :
   frontRightModule{new RevSwerveModule(kFrontRightDriveMotorCanID, kFrontRightSteerMotorCanID, kFrontRightSteerOffset)},
   rearLeftModule{new RevSwerveModule(kRearLeftDriveMotorCanID, kRearLeftSteerMotorCanID, kRearLeftSteerOffset)},
   rearRightModule{new RevSwerveModule(kRearRightDriveMotorCanID, kRearRightSteerMotorCanID, kRearRightSteerOffset)},
-  m_ahrs{new studica::AHRS(studica::AHRS::NavXComType::kMXP_SPI)}
+  m_ahrs{new studica::AHRS(studica::AHRS::NavXComType::kMXP_SPI)},
+  m_driveTuner{[this](PIDUpdate update) -> void {
+    frontLeftModule->UpdateDrivePID(update);
+    frontRightModule->UpdateDrivePID(update);
+    rearLeftModule->UpdateDrivePID(update);
+    rearRightModule->UpdateDrivePID(update);
+  }, DrivePID::kP, DrivePID::kI, DrivePID::kD, DrivePID::kFF},
+  m_steerTuner{[this](PIDUpdate update) -> void {
+    frontLeftModule->UpdateSteerPID(update);
+    frontRightModule->UpdateSteerPID(update);
+    rearLeftModule->UpdateSteerPID(update);
+    rearRightModule->UpdateSteerPID(update);
+  }, SteerPID::kP, SteerPID::kI, SteerPID::kD}
 {
   const frc::Pose2d initialPose{};
 
@@ -38,6 +52,11 @@ DriveSubsystem::DriveSubsystem() :
   m_poseEstimator = std::make_unique<frc::SwerveDrivePoseEstimator<4>>(
     kDriveKinematics, m_ahrs->GetRotation2d(), GetModulePositions(), initialPose
   );
+
+  // Bind test init and test exit to mode transition
+  frc2::RobotModeTriggers::Test()
+    .OnTrue(frc2::InstantCommand([this]() -> void {TestInit();}).ToPtr())
+    .OnFalse(frc2::InstantCommand([this]() -> void {TestExit();}).ToPtr());
 }
 
 void DriveSubsystem::ResetDrive() {
@@ -71,6 +90,28 @@ void DriveSubsystem::Periodic() {
 
 void DriveSubsystem::SimulationPeriodic() {
 
+}
+
+void DriveSubsystem::TestInit() {
+  frc::ShuffleboardTab &tab = frc::Shuffleboard::GetTab("Drive");
+
+  frc::ShuffleboardTab &driveSetupTab = frc::Shuffleboard::GetTab("Drive Setup");
+  frc::ShuffleboardTab &steerSetupTab = frc::Shuffleboard::GetTab("Steer Setup");
+
+  driveSetupTab.Add("PID", m_driveTuner).WithWidget(frc::BuiltInWidgets::kPIDController);
+  steerSetupTab.Add("PID", m_steerTuner).WithWidget(frc::BuiltInWidgets::kPIDController);
+
+  frontLeftModule->TestInit("Front left");
+  frontRightModule->TestInit("Front right");
+  rearLeftModule->TestInit("Rear left");
+  rearRightModule->TestInit("Rear right");
+}
+
+void DriveSubsystem::TestExit() {
+  frontLeftModule->TestExit();
+  frontRightModule->TestExit();
+  rearLeftModule->TestExit();
+  rearRightModule->TestExit();
 }
 
 void DriveSubsystem::ResetFieldOrientation() {
