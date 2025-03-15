@@ -29,9 +29,7 @@ DriveSubsystem::DriveSubsystem() :
     rearRightModule->UpdateSteerPID(update);
   }, SteerPID::kP, SteerPID::kI, SteerPID::kD}
 {
-  const frc::Pose2d initialPose{};
-
-  // TODO: Add Limelight init, also get initial pose from LL if available?
+  const frc::Pose3d initialPose{};
 
   frc::ShuffleboardTab &tab = frc::Shuffleboard::GetTab("Drive");
 
@@ -46,12 +44,12 @@ DriveSubsystem::DriveSubsystem() :
   nt_yOutput = yLayout.Add("Output [mps]", 0.0).GetEntry();
 
   frc::ShuffleboardLayout &rLayout = tab.GetLayout("R", frc::BuiltInLayouts::kList);
-  nt_rPosition = rLayout.Add("Orientation [rad]", initialPose.Rotation().Radians().value()).GetEntry();
+  nt_rPosition = rLayout.Add("Orientation [rad]", initialPose.Rotation().ToRotation2d().Radians().value()).GetEntry();
   nt_rSetpoint = rLayout.Add("Setpoint [rad]", 0.0).GetEntry();
   nt_rOutput = rLayout.Add("Output [radps]", 0.0).GetEntry();
 
-  m_poseEstimator = std::make_unique<frc::SwerveDrivePoseEstimator<4>>(
-    kDriveKinematics, m_ahrs->GetRotation2d(), GetModulePositions(), initialPose
+  m_poseEstimator = std::make_unique<frc::SwerveDrivePoseEstimator3d<4>>(
+    kDriveKinematics, m_ahrs->GetRotation3d(), GetModulePositions(), initialPose
   );
 
   // Bind test init and test exit to mode transition
@@ -73,15 +71,15 @@ void DriveSubsystem::ResetDrive() {
 }
 
 void DriveSubsystem::Periodic() {
-  frc::Rotation2d heading = m_ahrs->GetRotation2d();
+  frc::Rotation3d heading = m_ahrs->GetRotation3d();
 
-  frc::Pose2d pose = m_poseEstimator->Update(heading, GetModulePositions());
+  frc::Pose3d pose = m_poseEstimator->Update(heading, GetModulePositions());
 
   // TODO: Add Limelight update?
 
   nt_xPosition->SetDouble(pose.X().value());
   nt_yPosition->SetDouble(pose.Y().value());
-  nt_rPosition->SetDouble(pose.Rotation().Radians().value());
+  nt_rPosition->SetDouble(pose.Rotation().ToRotation2d().Radians().value());
 
   frc::SmartDashboard::PutNumber("Front left drive", frontLeftModule->GetPosition().distance.value());
   frc::SmartDashboard::PutNumber("Front right drive", frontRightModule->GetPosition().distance.value());
@@ -204,7 +202,10 @@ void DriveSubsystem::SetModuleStates(std::array<frc::SwerveModuleState, 4> desir
   }
 }
 
-frc::Pose2d DriveSubsystem::GetPose() {
+frc::Pose3d DriveSubsystem::GetPose() {
   return m_poseEstimator->GetEstimatedPosition();
 }
 
+void DriveSubsystem::UpdateVisionPose(frc::Pose3d measurement, units::millisecond_t timestamp) {
+  m_poseEstimator->AddVisionMeasurement(measurement, timestamp);
+}

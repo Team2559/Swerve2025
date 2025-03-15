@@ -9,7 +9,7 @@
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/kinematics/SwerveModuleState.h>
-#include <frc/estimator/SwerveDrivePoseEstimator.h>
+#include <frc/estimator/SwerveDrivePoseEstimator3d.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <units/length.h>
@@ -64,8 +64,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
               bool fieldRelative, units::meter_t x_center, units::meter_t y_center);
 
   void Stop();
-  
-  frc::Pose2d GetPose();
+
+  frc::Pose3d GetPose();
+
+  void UpdateVisionPose(frc::Pose3d measurement, units::millisecond_t timestamp);
 
   const std::array<frc::SwerveModulePosition, 4> GetModulePositions();
   void SetModuleStates(std::array<frc::SwerveModuleState, 4> desiredStates, bool steerOnly=false);
@@ -91,7 +93,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   std::unique_ptr<studica::AHRS> m_ahrs;
 
   // Pose estimator combines odometry with vision readings to yield an accurate robot pose; 4 specifies the number of modules.
-  std::unique_ptr<frc::SwerveDrivePoseEstimator<4>> m_poseEstimator;
+  std::unique_ptr<frc::SwerveDrivePoseEstimator3d<4>> m_poseEstimator;
 
   PIDTuner m_driveTuner;
   PIDTuner m_steerTuner;

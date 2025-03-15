@@ -10,6 +10,8 @@
 #include <units/velocity.h>
 #include <units/voltage.h>
 #include <units/constants.h>
+#include <frc/geometry/Transform3d.h>
+#include <frc/apriltag/AprilTagFieldLayout.h>
 
 /**
  * The Constants header provides a convenient place for teams to hold robot-wide
@@ -132,3 +134,13 @@ namespace DriveConstants {
 
   // TODO: Closed loop feedback for chassis speed and orientation
 }
+
+namespace VisionConstants {
+    // Camera network name
+    constexpr char kName[] = "photonvision";
+    // AprilTag field data; FMA events should all use the welded field, but off-season events may use the AndyMark field instead.
+    const frc::AprilTagFieldLayout kAprilTags = frc::AprilTagFieldLayout::LoadField(frc::AprilTagField::k2025ReefscapeWelded);
+    // Camera focal point position and orientation relative to the robot origin
+    constexpr frc::Transform3d kRobotToCam = frc::Transform3d(frc::Translation3d(0.5_m, 0_m, 0.5_m),
+                    frc::Rotation3d(0_rad, 0_rad, 0_rad));
+  }

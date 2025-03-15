@@ -10,7 +10,10 @@
 #include <frc2/command/InstantCommand.h>
 #include <frc/shuffleboard/Shuffleboard.h>
 
-RobotContainer::RobotContainer() {
+RobotContainer::RobotContainer() : m_visionSubsystem(
+  [this]() -> frc::Pose3d {return m_driveSubsystem.GetPose();},
+  [this](frc::Pose3d measurement, units::millisecond_t timestamp) -> void {m_driveSubsystem.UpdateVisionPose(measurement, timestamp);}
+) {
   // Initialize all of your commands and subsystems here
 
   m_driveSubsystem.SetDefaultCommand(frc2::RunCommand([this]() -> void {

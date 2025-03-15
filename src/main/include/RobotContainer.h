@@ -9,6 +9,7 @@
 #include <networktables/GenericEntry.h>
 
 #include "Constants.h"
+#include "subsystems/VisionSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
 
 /**
@@ -35,6 +36,7 @@ class RobotContainer {
 
   // The robot's subsystems are defined here...
   DriveSubsystem m_driveSubsystem;
+  VisionSubsystem m_visionSubsystem;
 
   void ConfigureBindings();
 
