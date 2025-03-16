@@ -45,8 +45,6 @@ class RevSwerveModule: public SwerveModule {
   SparkRelativeEncoder driveEncoder;
   SparkAbsoluteEncoder steerEncoder;
 
-  std::optional<nt::GenericEntry*> nt_driveSetpoint = {};
-  std::optional<nt::GenericEntry*> nt_driveMeasurement = {};
   std::optional<nt::GenericEntry*> nt_driveOutput = {};
   std::optional<nt::GenericEntry*> nt_steerOutput = {};
 };
