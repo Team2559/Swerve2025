@@ -11,6 +11,8 @@ class VisionSubsystem : public frc2::SubsystemBase {
  public:
   VisionSubsystem(std::function<frc::Pose3d ()> accessor, std::function<void (frc::Pose3d, units::millisecond_t)> updater);
 
+  std::optional<frc::Pose3d> SeedPose();
+
   void Periodic() override;
 
   private:

@@ -65,6 +65,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   void Stop();
 
+  void ResetPose(frc::Pose3d pose);
   frc::Pose3d GetPose();
 
   void UpdateVisionPose(frc::Pose3d measurement, units::millisecond_t timestamp);

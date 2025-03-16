@@ -5,10 +5,11 @@
 #include "RobotContainer.h"
 #include "ButtonUtil.h"
 
+#include <frc/shuffleboard/Shuffleboard.h>
 #include <frc2/command/button/Trigger.h>
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/InstantCommand.h>
-#include <frc/shuffleboard/Shuffleboard.h>
+#include <frc2/command/button/RobotModeTriggers.h>
 
 RobotContainer::RobotContainer() : m_visionSubsystem(
   [this]() -> frc::Pose3d {return m_driveSubsystem.GetPose();},
@@ -37,6 +38,13 @@ RobotContainer::RobotContainer() : m_visionSubsystem(
       {"max", nt::Value::MakeDouble(1.0)}
     })
     .GetEntry();
+  
+  frc2::RobotModeTriggers::Disabled().OnFalse(frc2::InstantCommand([this]() -> void {
+    std::optional<frc::Pose3d> pose = m_visionSubsystem.SeedPose();
+    if (pose.has_value()) {
+      m_driveSubsystem.ResetPose(pose.value());
+    }
+  }).ToPtr());
 }
 
 void RobotContainer::ConfigureBindings() {

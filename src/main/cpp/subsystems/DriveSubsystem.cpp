@@ -202,6 +202,10 @@ void DriveSubsystem::SetModuleStates(std::array<frc::SwerveModuleState, 4> desir
   }
 }
 
+void DriveSubsystem::ResetPose(frc::Pose3d pose) {
+  m_poseEstimator->ResetPose(pose);
+}
+
 frc::Pose3d DriveSubsystem::GetPose() {
   return m_poseEstimator->GetEstimatedPosition();
 }
