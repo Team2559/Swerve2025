@@ -15,6 +15,7 @@
 #include <units/length.h>
 #include <units/velocity.h>
 #include <units/angular_velocity.h>
+#include <networktables/GenericEntry.h>
 
 #include "PIDTuner.h"
 #include "SwerveModule.h"
