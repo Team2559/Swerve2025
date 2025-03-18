@@ -31,7 +31,7 @@ namespace OperatorConstants {
 
 namespace MotorConstants {
   // Speed constant for a Neo Vortex, in turns per second per volt
-  constexpr units::unit_t<units::compound_unit<units::turns_per_second, units::inverse<units::volt>>> kVNeoVortex = 565.0_rpm / 1.0_V;
+  constexpr units::unit_t<units::compound_unit<units::turns_per_second, units::inverse<units::volt>>> kVNeoVortex = 6784_rpm / 12.0_V;
 }
 
 namespace DriveConstants {
@@ -73,13 +73,13 @@ namespace DriveConstants {
   // This is an upper bound, for various reasons. It needs to be empirically
   // measured. Half of theoretical free speed is a reasonable starting value
   // (since something in the ballpark is needed here in order to to drive).
-  constexpr units::meters_per_second_t kMaxDriveSpeed = 22.1_fps / 2.0;
+  constexpr units::meters_per_second_t kMaxDriveSpeed = 6_V * MotorConstants::kVNeoVortex * kDriveDistancePerRotation;
   constexpr double kSlowDrivePercent = 0.50;
 
   // This is used for rotating the robot in place, about it's center.  This
   // may need to be empirically adjusted, but check kDriveMetersPerRotation
   // before making any adjustment here.
-  const units::meter_t kDriveMetersPerSteerCircle = 2.0_m * M_PI * pow(pow(kWheelbaseLength.value(), 2.0) + pow(kWheelbaseWidth.value(), 2.0), 0.5);
+  const units::meter_t kDriveMetersPerSteerCircle = M_PI * units::math::sqrt(units::math::pow<2>(kWheelbaseLength) + units::math::pow<2>(kWheelbaseWidth));
 
   // This is the maximum rotational speed -- not of a swerve module, but of
   // the entire robot.  This is a function of the maximum drive speed and the

@@ -26,7 +26,7 @@ RevSwerveModule::RevSwerveModule(int driveCanID, int steerCanID, units::angle::t
 
     driveConfig.encoder
       .PositionConversionFactor(kDriveDistancePerRotation.value())
-      .VelocityConversionFactor(kDriveDistancePerRotation.value() * (1_s / 1_min));
+      .VelocityConversionFactor(kDriveDistancePerRotation.value() * (1.0_s / 1.0_min));
 
     driveConfig.closedLoop
       .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
