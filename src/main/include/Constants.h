@@ -137,7 +137,7 @@ namespace DriveConstants {
 
 namespace VisionConstants {
     // Camera network name
-    constexpr char kName[] = "photonvision";
+    constexpr char kName[] = "OV9281";
     // AprilTag field data; FMA events should all use the welded field, but off-season events may use the AndyMark field instead.
     const frc::AprilTagFieldLayout kAprilTags = frc::AprilTagFieldLayout::LoadField(frc::AprilTagField::k2025ReefscapeWelded);
     // Camera focal point position and orientation relative to the robot origin
