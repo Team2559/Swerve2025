@@ -42,6 +42,8 @@ class RevSwerveModule: public SwerveModule {
   SparkFlex driveMotor;
   SparkFlex steerMotor;
 
+  double driveVff;
+
   SparkRelativeEncoder driveEncoder;
   SparkAbsoluteEncoder steerEncoder;
 

@@ -30,7 +30,8 @@ RevSwerveModule::RevSwerveModule(int driveCanID, int steerCanID, units::angle::t
 
     driveConfig.closedLoop
       .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-      .Pidf(DrivePID::kP, DrivePID::kI, DrivePID::kD, DrivePID::kFF);
+      .Pid(DrivePID::kP, DrivePID::kI, DrivePID::kD);
+    driveVff = DrivePID::kD;
 
     driveMotor.Configure(driveConfig, SparkFlex::ResetMode::kResetSafeParameters, SparkFlex::PersistMode::kNoPersistParameters);
   }
@@ -112,6 +113,10 @@ inline void BuildPIDConfig(SparkFlexConfig &config, const PIDUpdate &update) {
 }
 
 void RevSwerveModule::UpdateDrivePID(PIDUpdate &update) {
+  if (update.term == PIDUpdate::PIDTerm::kFF) {
+    driveVff = update.value;
+    return;
+  }
   SparkFlexConfig config;
   BuildPIDConfig(config, update);
   driveMotor.Configure(config, SparkFlex::ResetMode::kNoResetSafeParameters, SparkFlex::PersistMode::kNoPersistParameters);
@@ -149,7 +154,7 @@ void RevSwerveModule::StopSteer() {
 }
 
 void RevSwerveModule::SetDriveVelocity(units::velocity::meters_per_second_t velocity) {
-  driveMotor.GetClosedLoopController().SetReference(velocity.value(), SparkFlex::ControlType::kVelocity);
+  driveMotor.GetClosedLoopController().SetReference(velocity.value(), SparkFlex::ControlType::kVelocity, {}, velocity.value() * driveVff);
 
   if (nt_driveOutput.has_value()) {
     nt_driveOutput.value()->SetDoubleArray(std::array{

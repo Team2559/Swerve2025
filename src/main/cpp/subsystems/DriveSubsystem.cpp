@@ -21,7 +21,7 @@ DriveSubsystem::DriveSubsystem() :
     frontRightModule->UpdateDrivePID(update);
     rearLeftModule->UpdateDrivePID(update);
     rearRightModule->UpdateDrivePID(update);
-  }, DrivePID::kP, DrivePID::kI, DrivePID::kD, DrivePID::kFF},
+  }, DrivePID::kP, DrivePID::kI, DrivePID::kD, DrivePID::kV},
   m_steerTuner{[this](PIDUpdate update) -> void {
     frontLeftModule->UpdateSteerPID(update);
     frontRightModule->UpdateSteerPID(update);

@@ -114,10 +114,10 @@ namespace DriveConstants {
 
   // Closed loop feedback parameters for module drive speed
   namespace DrivePID {
-    constexpr double kP = 0.000;
+    constexpr double kP = 0.2;
     constexpr double kI = 0.0;
-    constexpr double kD = 0.0;
-    constexpr double kFF = (1.0 / MotorConstants::kVNeoVortex / kDriveDistancePerRotation).value();
+    constexpr double kD = 0.002;
+    constexpr double kV = (1.0 / MotorConstants::kVNeoVortex / kDriveDistancePerRotation).value();
   }
 
   // Steer encoder units are scaled for more responsive PID feedback
