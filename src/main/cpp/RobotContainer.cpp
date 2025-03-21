@@ -71,7 +71,7 @@ void RobotContainer::ConfigureBindings() {
 
   m_driverController.Back().OnTrue(frc2::InstantCommand([this]() -> void {
     m_driveSubsystem.ResetFieldOrientation();
-  }, {&m_driveSubsystem}).ToPtr());
+  }, {&m_driveSubsystem}).IgnoringDisable(true));
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
