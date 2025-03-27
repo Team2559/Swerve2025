@@ -37,8 +37,8 @@ namespace MotorConstants {
 namespace DriveConstants {
   // Drivebase geometry: distance between centers of right and left wheels on
   // robot; distance between centers of front and back wheels on robot.
-  inline constexpr units::meter_t kWheelbaseWidth = 0.7_m;
-  inline constexpr units::meter_t kWheelbaseLength = 0.7_m;
+  inline constexpr units::meter_t kWheelbaseWidth = 24.75_in;
+  inline constexpr units::meter_t kWheelbaseLength = 24.75_in;
 
   // Zero positions for the steer of the swerve modules
   inline constexpr units::degree_t kFrontLeftSteerOffset  = 17.2_deg;
