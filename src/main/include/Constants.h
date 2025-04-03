@@ -76,6 +76,8 @@ namespace DriveConstants {
   constexpr units::meters_per_second_t kMaxDriveSpeed = 6895_rpm * kDriveDistancePerRotation;
   constexpr double kSlowDrivePercent = 0.80;
 
+  inline constexpr double kSteerGearRatio = 50.0/16.0 * 60.0/10.0; // 18.75
+
   // This is used for rotating the robot in place, about it's center.  This
   // may need to be empirically adjusted, but check kDriveMetersPerRotation
   // before making any adjustment here.
