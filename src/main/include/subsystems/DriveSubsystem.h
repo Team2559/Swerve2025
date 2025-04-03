@@ -11,6 +11,7 @@
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/estimator/SwerveDrivePoseEstimator3d.h>
 #include <frc/controller/PIDController.h>
+#include <frc/smartdashboard/Field2d.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <units/length.h>
@@ -87,6 +88,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
       frc::Translation2d(+DriveConstants::kWheelbaseLength / 2, -DriveConstants::kWheelbaseWidth / 2),
       frc::Translation2d(-DriveConstants::kWheelbaseLength / 2, +DriveConstants::kWheelbaseWidth / 2),
       frc::Translation2d(-DriveConstants::kWheelbaseLength / 2, -DriveConstants::kWheelbaseWidth / 2)};
+
+  frc::Field2d field;
 
  private:
   // The four swerve modules.

@@ -64,6 +64,8 @@ DriveSubsystem::DriveSubsystem() :
       rearRightModule->TestDebug();
     }).WithTimeout(1.0_s)))
     .OnFalse(frc2::InstantCommand([this]() -> void {TestExit();}).ToPtr());
+
+  frc::SmartDashboard::PutData(&field);
 }
 
 void DriveSubsystem::ResetDrive() {
@@ -93,6 +95,8 @@ void DriveSubsystem::Periodic() {
   frc::SmartDashboard::PutNumber("Front right steer", frontRightModule->GetSteerPosition().convert<units::deg>().value());
   frc::SmartDashboard::PutNumber("Rear left steer", rearLeftModule->GetSteerPosition().convert<units::deg>().value());
   frc::SmartDashboard::PutNumber("Rear right steer", rearRightModule->GetSteerPosition().convert<units::deg>().value());
+
+  field.SetRobotPose(pose.ToPose2d());
 }
 
 void DriveSubsystem::SimulationPeriodic() {
