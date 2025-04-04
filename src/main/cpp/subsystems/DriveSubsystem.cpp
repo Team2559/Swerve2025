@@ -128,8 +128,8 @@ void DriveSubsystem::TestExit() {
   rearRightModule->TestExit();
 }
 
-void DriveSubsystem::ResetFieldOrientation() {
-  m_poseEstimator->ResetPose(frc::Pose3d(GetPose().Translation(), frc::Rotation3d()));
+void DriveSubsystem::ResetFieldOrientation(bool inverted) {
+  m_poseEstimator->ResetPose(frc::Pose3d(GetPose().Translation(), inverted ? frc::Rotation3d(frc::Rotation2d(180_deg)): frc::Rotation3d()));
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,

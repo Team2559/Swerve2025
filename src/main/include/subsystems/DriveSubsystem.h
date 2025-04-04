@@ -45,7 +45,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void TestInit();
   void TestExit();
 
-  void ResetFieldOrientation();
+  void ResetFieldOrientation(bool inverted = false);
 
   void Drive(units::meters_per_second_t xSpeed,
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
