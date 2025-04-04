@@ -243,5 +243,5 @@ frc::Pose3d DriveSubsystem::GetPose() {
 }
 
 void DriveSubsystem::UpdateVisionPose(frc::Pose3d measurement, units::millisecond_t timestamp) {
-  m_poseEstimator->AddVisionMeasurement(measurement, timestamp);
+  m_poseEstimator->AddVisionMeasurement(measurement, timestamp, {0.5, 0.5, 0.5, 0.8});
 }
