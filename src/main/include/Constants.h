@@ -135,18 +135,17 @@ namespace DriveConstants {
 
   // Closed loop feedback for chassis translation
   namespace TranslationPID {
-    constexpr double kP = 1.0;
+    constexpr double kP = 1.5;
     constexpr double kI = 0.0;
     constexpr double kD = 0.0;
   }
 
   // Closed loop feedback for chassis orientation
   namespace OrientationPID {
-    constexpr double kP = 1.0;
+    constexpr double kP = 2.0;
     constexpr double kI = 0.0;
     constexpr double kD = 0.0;
   }
-
 }
 
 namespace VisionConstants {
