@@ -5,6 +5,16 @@
 #include "subsystems/DriveSubsystem.h"
 
 namespace autos {
+  enum class AutoProgram {
+    kFallback,
+    kExample,
+  };
+
+  /**
+   * Fallback auto to drive off line if loading the desired auto fails 
+   */
+  frc2::CommandPtr FallbackAuto(DriveSubsystem& driveSubsystem);
+
   /**
    * Example static factory for a path-based autonomous command.
    */

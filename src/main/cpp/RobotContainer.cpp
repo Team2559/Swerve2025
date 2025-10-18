@@ -6,6 +6,7 @@
 #include "ButtonUtil.h"
 #include "commands/Autos.h"
 
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/DriverStation.h>
 #include <frc/livewindow/LiveWindow.h>
@@ -93,6 +94,13 @@ void RobotContainer::ConfigureBindings() {
       []() {frc::LiveWindow::SetEnabled(false);}
     ).WithName("LiveWindow")
   );
+}
+
+
+void RobotContainer::ListAutonomousCommands() {
+  using namespace autos;
+  m_autoChooser.SetDefaultOption("Example", AutoProgram::kExample);
+  frc::SmartDashboard::PutData("Auto Mode", &m_autoChooser);
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
