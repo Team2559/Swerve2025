@@ -32,8 +32,10 @@ class RobotContainer {
   frc2::CommandXboxController m_driverController{
       OperatorConstants::kDriverControllerPort};
 
+  // Configurable top drive speed over a driver station dashboard
   nt::GenericEntry* nt_fastDriveSpeed;
 
+  // Drive control mode flags for holonomic drivetrains (like swerve)
   bool m_fieldOriented = true;
   bool m_triggerSpeedEnabled = false;
   bool m_isRedAlliance = false;
@@ -46,5 +48,6 @@ class RobotContainer {
 
   void ConfigureBindings();
 
+  /// Process controller inputs into percentage robot velocities; returns an x, y, ω, fieldOriented tuple
   std::tuple<double, double, double, bool> GetDriveTeleopControls();
 };

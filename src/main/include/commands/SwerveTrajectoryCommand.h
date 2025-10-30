@@ -7,8 +7,20 @@
 
 #include "subsystems/DriveSubsystem.h"
 
+/**
+ * Command to follow a Choreo swerve trajectory
+ * 
+ * This command starts by resetting the robot pose to the initial trajectory
+ * pose, then follows the trajectory until the expected time has elapsed.
+ */
 class SwerveTrajectoryCommand : public frc2::CommandHelper<frc2::Command, SwerveTrajectoryCommand> {
  public:
+  /** 
+   * Creates a new SwerveTrajectoryCommand
+   * 
+   * @param subsystem The holonomic drivetrain subsystem to use
+   * @param trajectory The trajectory to follow
+   */
   explicit SwerveTrajectoryCommand(DriveSubsystem& subsystem, choreo::Trajectory<choreo::SwerveSample>& trajectory);
 
   void Initialize() override;

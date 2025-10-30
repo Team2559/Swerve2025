@@ -8,7 +8,7 @@ using namespace rev::spark;
 
 class RevSwerveModule: public SwerveModule {
  public:
-  // Initializers
+  // Initializer
   RevSwerveModule(int driveCanID, int steerCanID, units::angle::turn_t offset);
 
   // Test Methods

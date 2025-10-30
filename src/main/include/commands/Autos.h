@@ -11,7 +11,7 @@ namespace autos {
   };
 
   /**
-   * Fallback auto to drive off line if loading the desired auto fails 
+   * Fallback auto to slowly drive one meter off line if loading the desired auto fails 
    */
   frc2::CommandPtr FallbackAuto(DriveSubsystem& driveSubsystem);
 

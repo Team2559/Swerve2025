@@ -127,6 +127,7 @@ std::tuple<double, double, double, bool> RobotContainer::GetDriveTeleopControls(
   double LeftStickY = -m_driverController.GetLeftX();
   double rightStickRot = -m_driverController.GetRightX();
 
+  // Limit driving speed according to the current maximum speed
   if (LeftTrigAnalogVal < .05)
   {
     LeftStickX *= DriveConstants::kSlowDrivePercent;
@@ -137,12 +138,14 @@ std::tuple<double, double, double, bool> RobotContainer::GetDriveTeleopControls(
     LeftStickY *= fastDrivePercent;
   }
 
+  // Flip field-relative velocities if the driver is on the red side of the field
   if (m_isRedAlliance) {
     LeftStickX *= -1.0;
     LeftStickY *= -1.0;
   }
   
 
+  // Rescale final speeds to be more controllable
   if (m_triggerSpeedEnabled) // scale speed by analog trigger
   {
     double RightTrigAnalogVal = m_driverController.GetRightTriggerAxis();
@@ -168,6 +171,7 @@ std::tuple<double, double, double, bool> RobotContainer::GetDriveTeleopControls(
     LeftStickY = ConditionRawJoystickInput(LeftStickY);
   }
 
+  // Rescale final rotation speed to be more controllable
   rightStickRot = ConditionRawJoystickInput(rightStickRot);
 
   return std::make_tuple(LeftStickX, LeftStickY, rightStickRot, m_fieldOriented);
