@@ -1,4 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
+// Copyright (c) FRC 2559, FIRST, and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -12,7 +12,7 @@
 #include "RobotContainer.h"
 
 class Robot : public frc::TimedRobot {
- public:
+public:
   Robot();
   void RobotPeriodic() override;
   void DisabledInit() override;
@@ -25,7 +25,7 @@ class Robot : public frc::TimedRobot {
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
- private:
+private:
   // Have it empty by default so that if testing teleop it
   // doesn't have undefined behavior and potentially crash.
   std::optional<frc2::CommandPtr> m_autonomousCommand;

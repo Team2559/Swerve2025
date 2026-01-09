@@ -1,3 +1,7 @@
+// Copyright (c) FRC 2559, FIRST, and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 #pragma once
 
 #include <rev/SparkFlex.h>
@@ -6,8 +10,8 @@
 
 using namespace rev::spark;
 
-class RevSwerveModule: public SwerveModule {
- public:
+class RevSwerveModule : public SwerveModule {
+public:
   // Initializer
   RevSwerveModule(int driveCanID, int steerCanID, units::angle::turn_t offset);
 
@@ -38,7 +42,7 @@ class RevSwerveModule: public SwerveModule {
   void SetDesiredState(frc::SwerveModuleState &state) override;
   void Stop() override;
 
- private:
+private:
   SparkFlex driveMotor;
   SparkFlex steerMotor;
 
@@ -47,6 +51,6 @@ class RevSwerveModule: public SwerveModule {
   SparkRelativeEncoder driveEncoder;
   SparkAbsoluteEncoder steerEncoder;
 
-  std::optional<nt::GenericEntry*> nt_driveOutput = {};
-  std::optional<nt::GenericEntry*> nt_steerOutput = {};
+  std::optional<nt::GenericEntry *> nt_driveOutput = {};
+  std::optional<nt::GenericEntry *> nt_steerOutput = {};
 };

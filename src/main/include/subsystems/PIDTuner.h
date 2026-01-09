@@ -1,11 +1,14 @@
+// Copyright (c) FRC 2559, FIRST, and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 #pragma once
 
+#include <rev/config/SparkBaseConfig.h>
+#include <unordered_set>
 #include <wpi/sendable/Sendable.h>
 #include <wpi/sendable/SendableBuilder.h>
 #include <wpi/sendable/SendableHelper.h>
-#include <rev/config/SparkBaseConfig.h>
-#include <unordered_set>
-
 
 /**
  * An update to a single PID term, of a specific slot
@@ -36,14 +39,16 @@ struct PIDUpdate {
  * Generic tuner for adjusting arbitrary PID loops live from the dashboard
  * The provided handler is called with a [`PIDUpdate`] whenever a change is made
  */
-class PIDTuner: public wpi::Sendable, public wpi::SendableHelper<PIDTuner> {
- public:
-  PIDTuner(std::function<void (PIDUpdate)> handler) :
-    PIDTuner(handler, 0.0, 0.0, 0.0) {};
-  PIDTuner(std::function<void (PIDUpdate)> handler, double kP, double kI, double kD) :
-    PIDTuner(handler, kP, kI, kD, 0.0) {};
-  PIDTuner(std::function<void (PIDUpdate)> handler, double kP, double kI, double kD, double kFF) :
-    handler(handler), kP{kP}, kI{kI}, kD{kD}, kFF{kFF} {};
+class PIDTuner : public wpi::Sendable, public wpi::SendableHelper<PIDTuner> {
+public:
+  PIDTuner(std::function<void(PIDUpdate)> handler)
+      : PIDTuner(handler, 0.0, 0.0, 0.0) {};
+  PIDTuner(std::function<void(PIDUpdate)> handler, double kP, double kI,
+           double kD)
+      : PIDTuner(handler, kP, kI, kD, 0.0) {};
+  PIDTuner(std::function<void(PIDUpdate)> handler, double kP, double kI,
+           double kD, double kFF)
+      : handler(handler), kP{kP}, kI{kI}, kD{kD}, kFF{kFF} {};
   ~PIDTuner() = default;
 
   void InitSendable(wpi::SendableBuilder &builder) override;
@@ -53,9 +58,9 @@ class PIDTuner: public wpi::Sendable, public wpi::SendableHelper<PIDTuner> {
    */
   uint Slot();
 
- private:
+private:
   // The handler to call with new PID updates
-  std::function<void (PIDUpdate)> handler;
+  std::function<void(PIDUpdate)> handler;
 
   // The currently selected PID slot
   uint slot = 0;

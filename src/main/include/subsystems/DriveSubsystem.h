@@ -1,31 +1,31 @@
-// Copyright (c) FIRST and other WPILib contributors.
+// Copyright (c) FRC 2559, FIRST, and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 #pragma once
 
-#include <studica/AHRS.h>
+#include <choreo/Choreo.h>
+#include <frc/controller/PIDController.h>
+#include <frc/estimator/SwerveDrivePoseEstimator3d.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/kinematics/SwerveModuleState.h>
-#include <frc/estimator/SwerveDrivePoseEstimator3d.h>
-#include <frc/controller/PIDController.h>
 #include <frc/smartdashboard/Field2d.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
+#include <networktables/GenericEntry.h>
+#include <studica/AHRS.h>
+#include <units/angular_velocity.h>
 #include <units/length.h>
 #include <units/velocity.h>
-#include <units/angular_velocity.h>
-#include <networktables/GenericEntry.h>
-#include <choreo/Choreo.h>
 
 #include "Constants.h"
 #include "PIDTuner.h"
 #include "SwerveModule.h"
 
 class DriveSubsystem : public frc2::SubsystemBase {
- public:
+public:
   DriveSubsystem();
 
   /**
@@ -42,7 +42,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void TestInit();
   void TestExit();
 
-  /** 
+  /**
    * Zero out the drive distance
    */
   void ResetDrive();
@@ -53,43 +53,47 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void ResetFieldOrientation(bool inverted = false);
 
   /**
-   * Move at the requested set of speeds measured relative to either the robot or the field
+   * Move at the requested set of speeds measured relative to either the robot
+   * or the field
    */
   void Drive(units::meters_per_second_t xSpeed,
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
-             bool fieldRelative)
-  {
+             bool fieldRelative) {
     Drive(xSpeed, ySpeed, rot, fieldRelative, 0.0_m, 0.0_m);
   }
 
   /**
-   * Move at the requested set of speeds measured relative to either the robot or the field, with an arbitrary center of rotation
+   * Move at the requested set of speeds measured relative to either the robot
+   * or the field, with an arbitrary center of rotation
    */
   void Drive(units::meters_per_second_t xSpeed,
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
-             bool fieldRelative, units::meter_t x_center, units::meter_t y_center);
+             bool fieldRelative, units::meter_t x_center,
+             units::meter_t y_center);
 
   /**
    * Move towards the choreo trajectory sample position (with PID feedback)
    */
-  void FollowTrajectory(const choreo::SwerveSample& sample);
+  void FollowTrajectory(const choreo::SwerveSample &sample);
 
   /**
-   * Move the module steering to be aligned for the requested direction of travel
+   * Move the module steering to be aligned for the requested direction of
+   * travel
    */
   void SteerTo(units::meters_per_second_t xSpeed,
-               units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
-               bool fieldRelative)
-  {
+               units::meters_per_second_t ySpeed,
+               units::radians_per_second_t rot, bool fieldRelative) {
     SteerTo(xSpeed, ySpeed, rot, fieldRelative, 0.0_m, 0.0_m);
   }
-  
+
   /**
-   * Move the module steering to be aligned for the requested direction of travel, with an arbitrary center of rotation
+   * Move the module steering to be aligned for the requested direction of
+   * travel, with an arbitrary center of rotation
    */
   void SteerTo(units::meters_per_second_t xSpeed,
-              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
-              bool fieldRelative, units::meter_t x_center, units::meter_t y_center);
+               units::meters_per_second_t ySpeed,
+               units::radians_per_second_t rot, bool fieldRelative,
+               units::meter_t x_center, units::meter_t y_center);
 
   /**
    * Stop all drivetrain movement
@@ -102,44 +106,53 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void ResetPose(frc::Pose3d pose);
 
   /**
-   * Gets the robot's current pose (position + orientation) 
+   * Gets the robot's current pose (position + orientation)
    */
   frc::Pose3d GetPose();
 
   /**
-   * Incorporate a vision pose measurement into the robots cumulative pose estimation
+   * Incorporate a vision pose measurement into the robots cumulative pose
+   * estimation
    */
-  void UpdateVisionPose(frc::Pose3d measurement, units::millisecond_t timestamp);
+  void UpdateVisionPose(frc::Pose3d measurement,
+                        units::millisecond_t timestamp);
 
   /**
-   * Get the current steer angle and wheel positions for all modules for odometry
+   * Get the current steer angle and wheel positions for all modules for
+   * odometry
    */
   const std::array<frc::SwerveModulePosition, 4> GetModulePositions();
 
   /**
    * Sets the desired steer angle and wheel velocity for all modules
    */
-  void SetModuleStates(std::array<frc::SwerveModuleState, 4> desiredStates, bool steerOnly=false);
+  void SetModuleStates(std::array<frc::SwerveModuleState, 4> desiredStates,
+                       bool steerOnly = false);
 
   // Front: +x, Rear: -x; Left: +y, Right -y. Zero heading is to the front
   // and +rotation is counter-clockwise. This is all standard, although it
   // means the robot's front is along the x-axis, which is often pointed to
   // the right, as things are occasionally drawn.
   /**
-   * Drive kinematics for converting robot velocities into module velocities and vice-versa
+   * Drive kinematics for converting robot velocities into module velocities and
+   * vice-versa
    */
   frc::SwerveDriveKinematics<4> kDriveKinematics{
-      frc::Translation2d(+DriveConstants::kWheelbaseLength / 2, +DriveConstants::kWheelbaseWidth / 2),
-      frc::Translation2d(+DriveConstants::kWheelbaseLength / 2, -DriveConstants::kWheelbaseWidth / 2),
-      frc::Translation2d(-DriveConstants::kWheelbaseLength / 2, +DriveConstants::kWheelbaseWidth / 2),
-      frc::Translation2d(-DriveConstants::kWheelbaseLength / 2, -DriveConstants::kWheelbaseWidth / 2)};
+      frc::Translation2d(+DriveConstants::kWheelbaseLength / 2,
+                         +DriveConstants::kWheelbaseWidth / 2),
+      frc::Translation2d(+DriveConstants::kWheelbaseLength / 2,
+                         -DriveConstants::kWheelbaseWidth / 2),
+      frc::Translation2d(-DriveConstants::kWheelbaseLength / 2,
+                         +DriveConstants::kWheelbaseWidth / 2),
+      frc::Translation2d(-DriveConstants::kWheelbaseLength / 2,
+                         -DriveConstants::kWheelbaseWidth / 2)};
 
   /**
    * Field drawing for dashboard debug information
    */
   frc::Field2d field;
 
- private:
+private:
   // The four swerve modules.
   std::unique_ptr<SwerveModule> frontLeftModule;
   std::unique_ptr<SwerveModule> frontRightModule;
@@ -149,10 +162,12 @@ class DriveSubsystem : public frc2::SubsystemBase {
   // The navX gyro sensor.
   std::unique_ptr<studica::AHRS> m_ahrs;
 
-  // Pose estimator combines odometry with vision readings to yield an accurate robot pose; 4 specifies the number of modules.
+  // Pose estimator combines odometry with vision readings to yield an accurate
+  // robot pose; 4 specifies the number of modules.
   std::unique_ptr<frc::SwerveDrivePoseEstimator3d<4>> m_poseEstimator;
 
-  // Tuners to adjust PID values live from the dashboard; greatly increases the ease of tuning
+  // Tuners to adjust PID values live from the dashboard; greatly increases the
+  // ease of tuning
   PIDTuner m_driveTuner;
   PIDTuner m_steerTuner;
 
@@ -160,7 +175,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
   frc::PIDController m_xController;
   frc::PIDController m_yController;
   frc::PIDController m_rController;
-
 
   // Dashboard logging entries
   // -----------------------------------

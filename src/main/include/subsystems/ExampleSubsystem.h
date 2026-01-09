@@ -1,4 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
+// Copyright (c) FRC 2559, FIRST, and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -8,7 +8,7 @@
 #include <frc2/command/SubsystemBase.h>
 
 class ExampleSubsystem : public frc2::SubsystemBase {
- public:
+public:
   ExampleSubsystem();
 
   /**
@@ -35,7 +35,7 @@ class ExampleSubsystem : public frc2::SubsystemBase {
    */
   void SimulationPeriodic() override;
 
- private:
+private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 };

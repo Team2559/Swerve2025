@@ -1,3 +1,7 @@
+// Copyright (c) FRC 2559, FIRST, and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 #pragma once
 
 #include <choreo/Choreo.h>
@@ -9,19 +13,22 @@
 
 /**
  * Command to follow a Choreo swerve trajectory
- * 
+ *
  * This command starts by resetting the robot pose to the initial trajectory
  * pose, then follows the trajectory until the expected time has elapsed.
  */
-class SwerveTrajectoryCommand : public frc2::CommandHelper<frc2::Command, SwerveTrajectoryCommand> {
- public:
-  /** 
+class SwerveTrajectoryCommand
+    : public frc2::CommandHelper<frc2::Command, SwerveTrajectoryCommand> {
+public:
+  /**
    * Creates a new SwerveTrajectoryCommand
-   * 
+   *
    * @param subsystem The holonomic drivetrain subsystem to use
    * @param trajectory The trajectory to follow
    */
-  explicit SwerveTrajectoryCommand(DriveSubsystem& subsystem, choreo::Trajectory<choreo::SwerveSample>& trajectory);
+  explicit SwerveTrajectoryCommand(
+      DriveSubsystem &subsystem,
+      choreo::Trajectory<choreo::SwerveSample> &trajectory);
 
   void Initialize() override;
 
@@ -31,9 +38,9 @@ class SwerveTrajectoryCommand : public frc2::CommandHelper<frc2::Command, Swerve
 
   bool IsFinished() override;
 
- private:
-  DriveSubsystem& m_driveSubsytem;
-  choreo::Trajectory<choreo::SwerveSample>& m_trajectory;
+private:
+  DriveSubsystem &m_driveSubsytem;
+  choreo::Trajectory<choreo::SwerveSample> &m_trajectory;
 
   bool m_invertForRed = false;
   frc::Timer m_timer;

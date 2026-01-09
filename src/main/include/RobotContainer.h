@@ -1,4 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
+// Copyright (c) FRC 2559, FIRST, and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -10,9 +10,9 @@
 #include <networktables/GenericEntry.h>
 
 #include "Constants.h"
-#include "subsystems/VisionSubsystem.h"
-#include "subsystems/DriveSubsystem.h"
 #include "commands/Autos.h"
+#include "subsystems/DriveSubsystem.h"
+#include "subsystems/VisionSubsystem.h"
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -22,18 +22,18 @@
  * commands, and trigger mappings) should be declared here.
  */
 class RobotContainer {
- public:
+public:
   RobotContainer();
 
   void ListAutonomousCommands();
   frc2::CommandPtr GetAutonomousCommand();
 
- private:
+private:
   frc2::CommandXboxController m_driverController{
       OperatorConstants::kDriverControllerPort};
 
   // Configurable top drive speed over a driver station dashboard
-  nt::GenericEntry* nt_fastDriveSpeed;
+  nt::GenericEntry *nt_fastDriveSpeed;
 
   // Drive control mode flags for holonomic drivetrains (like swerve)
   bool m_fieldOriented = true;
@@ -48,6 +48,7 @@ class RobotContainer {
 
   void ConfigureBindings();
 
-  /// Process controller inputs into percentage robot velocities; returns an x, y, ω, fieldOriented tuple
+  /// Process controller inputs into percentage robot velocities; returns an x,
+  /// y, ω, fieldOriented tuple
   std::tuple<double, double, double, bool> GetDriveTeleopControls();
 };
