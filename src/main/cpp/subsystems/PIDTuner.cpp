@@ -7,32 +7,32 @@
 void PIDTuner::InitSendable(wpi::SendableBuilder &builder) {
   builder.SetSmartDashboardType("PIDController");
   builder.AddDoubleProperty(
-      "p", [this]() -> double { return kP; },
-      [this](double kP) -> void {
+      "p", [this]() { return kP; },
+      [this](double kP) {
         this->kP = kP;
         handler({PIDUpdate::PIDTerm::kP, kP, slot});
       });
   builder.AddDoubleProperty(
-      "i", [this]() -> double { return kI; },
-      [this](double kI) -> void {
+      "i", [this]() { return kI; },
+      [this](double kI) {
         this->kI = kI;
         handler({PIDUpdate::PIDTerm::kI, kI, slot});
       });
   builder.AddDoubleProperty(
-      "d", [this]() -> double { return kD; },
-      [this](double kD) -> void {
+      "d", [this]() { return kD; },
+      [this](double kD) {
         this->kD = kD;
         handler({PIDUpdate::PIDTerm::kD, kD, slot});
       });
   builder.AddDoubleProperty(
-      "f", [this]() -> double { return kFF; },
-      [this](double kFF) -> void {
+      "f", [this]() { return kFF; },
+      [this](double kFF) {
         this->kFF = kFF;
         handler({PIDUpdate::PIDTerm::kFF, kFF, slot});
       });
   builder.AddIntegerProperty(
-      "slot", [this]() -> int { return slot; },
-      [this](int newSlot) -> void { slot = newSlot; });
+      "slot", [this]() { return slot; },
+      [this](int newSlot) { slot = newSlot; });
 }
 
 uint PIDTuner::Slot() { return slot; }

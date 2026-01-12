@@ -18,16 +18,15 @@
 
 RobotContainer::RobotContainer()
     : m_visionSubsystem(
-          [this]() -> frc::Pose3d { return m_driveSubsystem.GetPose(); },
-          [this](frc::Pose3d measurement,
-                 units::millisecond_t timestamp) -> void {
+          [this]() { return m_driveSubsystem.GetPose(); },
+          [this](frc::Pose3d measurement, units::millisecond_t timestamp) {
             m_driveSubsystem.UpdateVisionPose(measurement, timestamp);
           }) {
   // Initialize all of your commands and subsystems here
 
   m_driveSubsystem.SetDefaultCommand(
       frc2::RunCommand(
-          [this]() -> void {
+          [this]() {
             const auto controls = GetDriveTeleopControls();
 
             m_driveSubsystem.Drive(
@@ -51,7 +50,7 @@ RobotContainer::RobotContainer()
                           .GetEntry();
 
   frc2::RobotModeTriggers::Disabled().OnFalse(
-      frc2::InstantCommand([this]() -> void {
+      frc2::InstantCommand([this]() {
         std::optional<frc::Pose3d> pose = m_visionSubsystem.SeedPose();
         if (pose.has_value()) {
           m_driveSubsystem.ResetPose(pose.value());
@@ -82,7 +81,7 @@ void RobotContainer::ConfigureBindings() {
   // m_driverController.B().WhileTrue(m_subsystem.ExampleMethodCommand());
 
   static auto steerOnlyCommand = frc2::RunCommand(
-      [this]() -> void {
+      [this]() {
         const auto controls = GetDriveTeleopControls();
 
         m_driveSubsystem.SteerTo(
@@ -95,14 +94,12 @@ void RobotContainer::ConfigureBindings() {
 
   frc::Shuffleboard::GetTab("Drive").Add("Steer Only", steerOnlyCommand);
 
-  m_driverController.Back().OnTrue(frc2::InstantCommand(
-                                       [this]() -> void {
-                                         m_driveSubsystem.ResetFieldOrientation(
-                                             m_isRedAlliance);
-                                       },
-                                       {&m_driveSubsystem})
-                                       .IgnoringDisable(true)
-                                       .WithName("Reset Field Orientation"));
+  m_driverController.Back().OnTrue(
+      frc2::InstantCommand(
+          [this]() { m_driveSubsystem.ResetFieldOrientation(m_isRedAlliance); },
+          {&m_driveSubsystem})
+          .IgnoringDisable(true)
+          .WithName("Reset Field Orientation"));
 
   m_driverController.Start().ToggleOnTrue(
       frc2::StartEndCommand([]() { frc::LiveWindow::SetEnabled(true); },

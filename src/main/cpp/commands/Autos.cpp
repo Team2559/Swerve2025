@@ -17,7 +17,7 @@ frc2::CommandPtr autos::FallbackAuto(DriveSubsystem &driveSubsystem) {
                driveSubsystem.Drive(-0.25_mps, 0.0_mps, 0.0_rad_per_s, true);
              },
              {&driveSubsystem})
-      .Until([&]() -> bool {
+      .Until([&]() {
         return units::math::abs(driveSubsystem.GetPose().X()) >= 1.0_m;
       })
       .BeforeStarting([]() { printf(">>>Running traditional auto\n"); });

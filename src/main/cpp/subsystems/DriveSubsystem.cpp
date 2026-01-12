@@ -32,14 +32,14 @@ DriveSubsystem::DriveSubsystem()
       m_xController{TranslationPID::kP, TranslationPID::kI, TranslationPID::kD},
       m_yController{TranslationPID::kP, TranslationPID::kI, TranslationPID::kD},
       m_rController{OrientationPID::kP, OrientationPID::kI, OrientationPID::kD},
-      m_driveTuner{[this](PIDUpdate update) -> void {
+      m_driveTuner{[this](PIDUpdate update) {
                      frontLeftModule->UpdateDrivePID(update);
                      frontRightModule->UpdateDrivePID(update);
                      rearLeftModule->UpdateDrivePID(update);
                      rearRightModule->UpdateDrivePID(update);
                    },
                    DrivePID::kP, DrivePID::kI, DrivePID::kD, DrivePID::kV},
-      m_steerTuner{[this](PIDUpdate update) -> void {
+      m_steerTuner{[this](PIDUpdate update) {
                      frontLeftModule->UpdateSteerPID(update);
                      frontRightModule->UpdateSteerPID(update);
                      rearLeftModule->UpdateSteerPID(update);
@@ -80,15 +80,15 @@ DriveSubsystem::DriveSubsystem()
 
   // Bind test init and test exit to mode transition
   frc2::RobotModeTriggers::Test()
-      .OnTrue(frc2::InstantCommand([this]() -> void {
+      .OnTrue(frc2::InstantCommand([this]() {
                 TestInit();
-              }).AndThen(frc2::RunCommand([this]() -> void {
+              }).AndThen(frc2::RunCommand([this]() {
                            frontLeftModule->TestDebug();
                            frontRightModule->TestDebug();
                            rearLeftModule->TestDebug();
                            rearRightModule->TestDebug();
                          }).WithTimeout(1.0_s)))
-      .OnFalse(frc2::InstantCommand([this]() -> void { TestExit(); }).ToPtr());
+      .OnFalse(frc2::InstantCommand([this]() { TestExit(); }).ToPtr());
 
   frc::SmartDashboard::PutData(&field);
 }
