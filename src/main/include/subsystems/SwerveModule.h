@@ -10,6 +10,8 @@
 #include <units/length.h>
 #include <units/velocity.h>
 
+#include <string>
+
 #include "PIDTuner.h"
 
 class SwerveModule {

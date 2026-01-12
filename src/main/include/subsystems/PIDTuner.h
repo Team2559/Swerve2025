@@ -5,10 +5,11 @@
 #pragma once
 
 #include <rev/config/SparkBaseConfig.h>
-#include <unordered_set>
 #include <wpi/sendable/Sendable.h>
 #include <wpi/sendable/SendableBuilder.h>
 #include <wpi/sendable/SendableHelper.h>
+
+#include <unordered_set>
 
 /**
  * An update to a single PID term, of a specific slot
@@ -41,14 +42,12 @@ struct PIDUpdate {
  */
 class PIDTuner : public wpi::Sendable, public wpi::SendableHelper<PIDTuner> {
 public:
-  PIDTuner(std::function<void(PIDUpdate)> handler)
-      : PIDTuner(handler, 0.0, 0.0, 0.0) {};
-  PIDTuner(std::function<void(PIDUpdate)> handler, double kP, double kI,
-           double kD)
-      : PIDTuner(handler, kP, kI, kD, 0.0) {};
-  PIDTuner(std::function<void(PIDUpdate)> handler, double kP, double kI,
-           double kD, double kFF)
-      : handler(handler), kP{kP}, kI{kI}, kD{kD}, kFF{kFF} {};
+  PIDTuner(std::function<void(PIDUpdate)> handler) :
+      PIDTuner(handler, 0.0, 0.0, 0.0) {};
+  PIDTuner(std::function<void(PIDUpdate)> handler, double kP, double kI, double kD) :
+      PIDTuner(handler, kP, kI, kD, 0.0) {};
+  PIDTuner(std::function<void(PIDUpdate)> handler, double kP, double kI, double kD, double kFF) :
+      handler(handler), kP{kP}, kI{kI}, kD{kD}, kFF{kFF} {};
   ~PIDTuner() = default;
 
   void InitSendable(wpi::SendableBuilder &builder) override;

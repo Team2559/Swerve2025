@@ -9,6 +9,8 @@
 #include <frc2/command/button/CommandXboxController.h>
 #include <networktables/GenericEntry.h>
 
+#include <tuple>
+
 #include "Constants.h"
 #include "commands/Autos.h"
 #include "subsystems/DriveSubsystem.h"
@@ -30,7 +32,8 @@ public:
 
 private:
   frc2::CommandXboxController m_driverController{
-      OperatorConstants::kDriverControllerPort};
+    OperatorConstants::kDriverControllerPort
+  };
 
   // Configurable top drive speed over a driver station dashboard
   nt::GenericEntry *nt_fastDriveSpeed;
@@ -48,7 +51,6 @@ private:
 
   void ConfigureBindings();
 
-  /// Process controller inputs into percentage robot velocities; returns an x,
-  /// y, ω, fieldOriented tuple
+  /// Process controller inputs into percentage robot velocities; returns an x, y, ω, fieldOriented tuple
   std::tuple<double, double, double, bool> GetDriveTeleopControls();
 };

@@ -2,9 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include <math.h>
-
 #include "ButtonUtil.h"
+
+#include <math.h>
 
 double ConditionRawTriggerInput(double RawTrigVal) noexcept {
   // Input deadband around 0.0 (+/- range).
@@ -15,8 +15,7 @@ double ConditionRawTriggerInput(double RawTrigVal) noexcept {
     // Trigger is within the deadzone
     return 0;
   } else {
-    // Trigger is outside the deadzone, scale the trigger value to make low
-    // magnitudes more sensitive
+    // Trigger is outside the deadzone, scale the trigger value to make low magnitudes more sensitive
     RawTrigVal -= deadZoneVal;
     RawTrigVal *= deadZoneCorrection;
     return pow(RawTrigVal, 3.0); // Cube the trigger value

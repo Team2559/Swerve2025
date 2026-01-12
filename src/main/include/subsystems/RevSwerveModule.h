@@ -6,9 +6,9 @@
 
 #include <rev/SparkFlex.h>
 
-#include "SwerveModule.h"
+#include <string>
 
-using namespace rev::spark;
+#include "SwerveModule.h"
 
 class RevSwerveModule : public SwerveModule {
 public:
@@ -43,13 +43,13 @@ public:
   void Stop() override;
 
 private:
-  SparkFlex driveMotor;
-  SparkFlex steerMotor;
+  rev::spark::SparkFlex driveMotor;
+  rev::spark::SparkFlex steerMotor;
 
   double driveVff;
 
-  SparkRelativeEncoder driveEncoder;
-  SparkAbsoluteEncoder steerEncoder;
+  rev::spark::SparkRelativeEncoder driveEncoder;
+  rev::spark::SparkAbsoluteEncoder steerEncoder;
 
   std::optional<nt::GenericEntry *> nt_driveOutput = {};
   std::optional<nt::GenericEntry *> nt_steerOutput = {};

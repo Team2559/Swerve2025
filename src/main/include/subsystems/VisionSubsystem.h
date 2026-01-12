@@ -9,6 +9,8 @@
 #include <photon/PhotonCamera.h>
 #include <photon/PhotonPoseEstimator.h>
 
+#include <memory>
+
 #include "Constants.h"
 
 /**
@@ -17,12 +19,12 @@
 class VisionSubsystem : public frc2::SubsystemBase {
 public:
   VisionSubsystem(
-      std::function<frc::Pose3d()> accessor,
-      std::function<void(frc::Pose3d, units::millisecond_t)> updater);
+    std::function<frc::Pose3d()> accessor,
+    std::function<void(frc::Pose3d, units::millisecond_t)> updater
+  );
 
   /**
-   * Returns an initial pose estimate based on the first valid camera result, if
-   * any tags are visible
+   * Returns an initial pose estimate based on the first valid camera result, if any tags are visible
    */
   std::optional<frc::Pose3d> SeedPose();
 
@@ -40,6 +42,5 @@ private:
   std::function<void(frc::Pose3d, units::millisecond_t)> m_updater;
 
   /// Provides new pose estimates based on all unused camera results, if any
-  void ProcessCameraResults(
-      std::function<void(frc::Pose3d, units::millisecond_t)> updater);
+  void ProcessCameraResults(std::function<void(frc::Pose3d, units::millisecond_t)> updater);
 };

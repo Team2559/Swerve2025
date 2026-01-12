@@ -3,8 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "RobotContainer.h"
-#include "ButtonUtil.h"
-#include "commands/Autos.h"
 
 #include <frc/DriverStation.h>
 #include <frc/livewindow/LiveWindow.h>
@@ -16,56 +14,64 @@
 #include <frc2/command/button/RobotModeTriggers.h>
 #include <frc2/command/button/Trigger.h>
 
-RobotContainer::RobotContainer()
-    : m_visionSubsystem(
-          [this]() { return m_driveSubsystem.GetPose(); },
-          [this](frc::Pose3d measurement, units::millisecond_t timestamp) {
-            m_driveSubsystem.UpdateVisionPose(measurement, timestamp);
-          }) {
+#include <tuple>
+
+#include "ButtonUtil.h"
+#include "commands/Autos.h"
+
+RobotContainer::RobotContainer() :
+    m_visionSubsystem(
+      [this]() { return m_driveSubsystem.GetPose(); },
+      [this](frc::Pose3d measurement, units::millisecond_t timestamp) { m_driveSubsystem.UpdateVisionPose(measurement, timestamp); }
+    ) {
   // Initialize all of your commands and subsystems here
 
   m_driveSubsystem.SetDefaultCommand(
-      frc2::RunCommand(
-          [this]() {
-            const auto controls = GetDriveTeleopControls();
+    frc2::RunCommand([this]() {
+      const auto controls = GetDriveTeleopControls();
 
-            m_driveSubsystem.Drive(
-                std::get<0>(controls) * DriveConstants::kMaxDriveSpeed,
-                std::get<1>(controls) * DriveConstants::kMaxDriveSpeed,
-                std::get<2>(controls) * DriveConstants::kMaxTurnRate,
-                std::get<3>(controls));
-          },
-          {&m_driveSubsystem})
-          .WithName("TeleopDrive"));
+      m_driveSubsystem.Drive(
+        std::get<0>(controls) * DriveConstants::kMaxDriveSpeed,
+        std::get<1>(controls) * DriveConstants::kMaxDriveSpeed,
+        std::get<2>(controls) * DriveConstants::kMaxTurnRate,
+        std::get<3>(controls)
+      );
+    },
+                     {&m_driveSubsystem})
+      .WithName("TeleopDrive")
+  );
 
   // Configure the button bindings
   ConfigureBindings();
 
-  nt_fastDriveSpeed = frc::Shuffleboard::GetTab("Drive")
-                          .Add("Max Speed", 1.0)
-                          .WithWidget(frc::BuiltInWidgets::kNumberSlider)
-                          .WithProperties({// specify widget properties here
-                                           {"min", nt::Value::MakeDouble(0.0)},
-                                           {"max", nt::Value::MakeDouble(1.0)}})
-                          .GetEntry();
+  nt_fastDriveSpeed =
+    frc::Shuffleboard::GetTab("Drive")
+      .Add("Max Speed", 1.0)
+      .WithWidget(frc::BuiltInWidgets::kNumberSlider)
+      .WithProperties(
+        {// specify widget properties here
+         {"min", nt::Value::MakeDouble(0.0)},
+         {"max", nt::Value::MakeDouble(1.0)}
+        }
+      )
+      .GetEntry();
 
   frc2::RobotModeTriggers::Disabled().OnFalse(
-      frc2::InstantCommand([this]() {
-        std::optional<frc::Pose3d> pose = m_visionSubsystem.SeedPose();
-        if (pose.has_value()) {
-          m_driveSubsystem.ResetPose(pose.value());
-        }
+    frc2::InstantCommand([this]() {
+      std::optional<frc::Pose3d> pose = m_visionSubsystem.SeedPose();
+      if (pose.has_value()) {
+        m_driveSubsystem.ResetPose(pose.value());
+      }
 
-        std::optional<frc::DriverStation::Alliance> alliance =
-            frc::DriverStation::GetAlliance();
-        if (alliance.has_value()) {
-          m_isRedAlliance =
-              alliance.value() == frc::DriverStation::Alliance::kRed;
-        }
-      }).WithName("InitializeVision"));
+      std::optional<frc::DriverStation::Alliance> alliance = frc::DriverStation::GetAlliance();
+      if (alliance.has_value()) {
+        m_isRedAlliance = alliance.value() == frc::DriverStation::Alliance::kRed;
+      }
+    }).WithName("InitializeVision")
+  );
 
   frc::Shuffleboard::GetTab("LiveWindow")
-      .AddBoolean("Live Window Enabled", frc::LiveWindow::IsEnabled);
+    .AddBoolean("Live Window Enabled", frc::LiveWindow::IsEnabled);
 }
 
 void RobotContainer::ConfigureBindings() {
@@ -80,31 +86,33 @@ void RobotContainer::ConfigureBindings() {
   // pressed, cancelling on release.
   // m_driverController.B().WhileTrue(m_subsystem.ExampleMethodCommand());
 
-  static auto steerOnlyCommand = frc2::RunCommand(
-      [this]() {
-        const auto controls = GetDriveTeleopControls();
+  static auto steerOnlyCommand = frc2::RunCommand([this]() {
+    const auto controls = GetDriveTeleopControls();
 
-        m_driveSubsystem.SteerTo(
-            std::get<0>(controls) * DriveConstants::kMaxDriveSpeed,
-            std::get<1>(controls) * DriveConstants::kMaxDriveSpeed,
-            std::get<2>(controls) * DriveConstants::kMaxTurnRate,
-            std::get<3>(controls));
-      },
-      {&m_driveSubsystem});
+    m_driveSubsystem.SteerTo(
+      std::get<0>(controls) * DriveConstants::kMaxDriveSpeed,
+      std::get<1>(controls) * DriveConstants::kMaxDriveSpeed,
+      std::get<2>(controls) * DriveConstants::kMaxTurnRate,
+      std::get<3>(controls)
+    );
+  },
+                                                  {&m_driveSubsystem});
 
   frc::Shuffleboard::GetTab("Drive").Add("Steer Only", steerOnlyCommand);
 
-  m_driverController.Back().OnTrue(
-      frc2::InstantCommand(
-          [this]() { m_driveSubsystem.ResetFieldOrientation(m_isRedAlliance); },
-          {&m_driveSubsystem})
-          .IgnoringDisable(true)
-          .WithName("Reset Field Orientation"));
+  m_driverController.Back().OnTrue(frc2::InstantCommand([this]() {
+                                     m_driveSubsystem.ResetFieldOrientation(m_isRedAlliance);
+                                   },
+                                                        {&m_driveSubsystem})
+                                     .IgnoringDisable(true)
+                                     .WithName("Reset Field Orientation"));
 
   m_driverController.Start().ToggleOnTrue(
-      frc2::StartEndCommand([]() { frc::LiveWindow::SetEnabled(true); },
-                            []() { frc::LiveWindow::SetEnabled(false); })
-          .WithName("LiveWindow"));
+    frc2::StartEndCommand(
+      []() { frc::LiveWindow::SetEnabled(true); },
+      []() { frc::LiveWindow::SetEnabled(false); }
+    ).WithName("LiveWindow")
+  );
 }
 
 void RobotContainer::ListAutonomousCommands() {
@@ -117,8 +125,7 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   return autos::ExampleAuto(m_driveSubsystem);
 }
 
-std::tuple<double, double, double, bool>
-RobotContainer::GetDriveTeleopControls() {
+std::tuple<double, double, double, bool> RobotContainer::GetDriveTeleopControls() {
   /*
   The robot's frame of reference is the standard unit circle, from
   trigonometry. However, the front of the robot is facing along the positive
@@ -147,8 +154,7 @@ RobotContainer::GetDriveTeleopControls() {
     LeftStickY *= fastDrivePercent;
   }
 
-  // Flip field-relative velocities if the driver is on the red side of the
-  // field
+  // Flip field-relative velocities if the driver is on the red side of the field
   if (m_isRedAlliance) {
     LeftStickX *= -1.0;
     LeftStickY *= -1.0;
@@ -178,6 +184,5 @@ RobotContainer::GetDriveTeleopControls() {
   // Rescale final rotation speed to be more controllable
   rightStickRot = ConditionRawJoystickInput(rightStickRot);
 
-  return std::make_tuple(LeftStickX, LeftStickY, rightStickRot,
-                         m_fieldOriented);
+  return std::make_tuple(LeftStickX, LeftStickY, rightStickRot, m_fieldOriented);
 }
