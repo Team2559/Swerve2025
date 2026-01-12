@@ -45,11 +45,6 @@ public:
   void TestExit();
 
   /**
-   * Zero out the drive distance
-   */
-  void ResetDrive();
-
-  /**
    *  Reset forward for the driver to be the way the robot is currently facing
    */
   void ResetFieldOrientation(bool inverted = false);

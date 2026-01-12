@@ -171,10 +171,6 @@ void RevSwerveModule::SetDriveVelocity(units::velocity::meters_per_second_t velo
   }
 }
 
-void RevSwerveModule::ResetDriveEncoder() {
-  driveEncoder.SetPosition(0.0);
-}
-
 void RevSwerveModule::SetDrivePercent(double percent) {
   driveMotor.Set(percent);
 

@@ -33,7 +33,6 @@ public:
   void StopSteer() override;
 
   void SetDriveVelocity(units::velocity::meters_per_second_t velocity);
-  void ResetDriveEncoder() override;
   void SetDrivePercent(double percent) override;
   void StopDrive() override;
 

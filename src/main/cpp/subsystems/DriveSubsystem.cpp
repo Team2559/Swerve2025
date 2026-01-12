@@ -91,13 +91,6 @@ DriveSubsystem::DriveSubsystem() :
   frc::SmartDashboard::PutData(&field);
 }
 
-void DriveSubsystem::ResetDrive() {
-  frontLeftModule->ResetDriveEncoder();
-  frontRightModule->ResetDriveEncoder();
-  rearLeftModule->ResetDriveEncoder();
-  rearRightModule->ResetDriveEncoder();
-}
-
 void DriveSubsystem::Periodic() {
   frc::Rotation3d heading = m_ahrs->GetRotation3d();
 

@@ -42,7 +42,6 @@ public:
   // Drive functions; set, reset, and percent control; set causes a small
   // acceleration towards the setpoint, percent is useful for test profiling
   virtual void SetDriveVelocity(units::meters_per_second_t velocity) = 0;
-  virtual void ResetDriveEncoder() = 0;
   virtual void SetDrivePercent(double percent) = 0;
   virtual void StopDrive() = 0;
 
