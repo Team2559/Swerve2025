@@ -9,8 +9,6 @@
 #include <photon/PhotonCamera.h>
 #include <photon/PhotonPoseEstimator.h>
 
-#include <memory>
-
 #include "Constants.h"
 
 /**
@@ -32,7 +30,7 @@ public:
 
 private:
   /// Camera for pose estimation
-  std::unique_ptr<photon::PhotonCamera> m_camera;
+  photon::PhotonCamera m_camera;
   /// Pose estimator to turn 2d tag coordinates into 3d robot poses
   photon::PhotonPoseEstimator m_poseEstimator;
 

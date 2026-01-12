@@ -10,8 +10,6 @@
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/button/RobotModeTriggers.h>
 
-#include <memory>
-
 #include "Constants.h"
 #include "subsystems/RevSwerveModule.h"
 
@@ -19,11 +17,20 @@ using namespace DriveConstants;
 
 DriveSubsystem::DriveSubsystem() :
     SubsystemBase("Drive Subsystem"),
-    frontLeftModule{new RevSwerveModule(kFrontLeftDriveMotorCanID, kFrontLeftSteerMotorCanID, kFrontLeftSteerOffset)},
-    frontRightModule{new RevSwerveModule(kFrontRightDriveMotorCanID, kFrontRightSteerMotorCanID, kFrontRightSteerOffset)},
-    rearLeftModule{new RevSwerveModule(kRearLeftDriveMotorCanID, kRearLeftSteerMotorCanID, kRearLeftSteerOffset)},
-    rearRightModule{new RevSwerveModule(kRearRightDriveMotorCanID, kRearRightSteerMotorCanID, kRearRightSteerOffset)},
-    m_ahrs{new studica::AHRS(studica::AHRS::NavXComType::kMXP_SPI)},
+    frontLeftModule{
+      new RevSwerveModule(kFrontLeftDriveMotorCanID, kFrontLeftSteerMotorCanID, kFrontLeftSteerOffset)
+    },
+    frontRightModule{
+      new RevSwerveModule(kFrontRightDriveMotorCanID, kFrontRightSteerMotorCanID, kFrontRightSteerOffset)
+    },
+    rearLeftModule{
+      new RevSwerveModule(kRearLeftDriveMotorCanID, kRearLeftSteerMotorCanID, kRearLeftSteerOffset)
+    },
+    rearRightModule{
+      new RevSwerveModule(kRearRightDriveMotorCanID, kRearRightSteerMotorCanID, kRearRightSteerOffset)
+    },
+    m_ahrs{studica::AHRS::NavXComType::kMXP_SPI},
+    m_poseEstimator{kDriveKinematics, m_ahrs.GetRotation3d(), GetModulePositions(), frc::Pose3d()},
     m_xController{TranslationPID::kP, TranslationPID::kI, TranslationPID::kD},
     m_yController{TranslationPID::kP, TranslationPID::kI, TranslationPID::kD},
     m_rController{OrientationPID::kP, OrientationPID::kI, OrientationPID::kD},
@@ -50,7 +57,7 @@ DriveSubsystem::DriveSubsystem() :
       SteerPID::kI,
       SteerPID::kD
     } {
-  const frc::Pose3d initialPose{};
+  const frc::Pose3d initialPose = m_poseEstimator.GetEstimatedPosition();
 
   frc::ShuffleboardTab &tab = frc::Shuffleboard::GetTab("Drive");
 
@@ -68,10 +75,6 @@ DriveSubsystem::DriveSubsystem() :
   nt_rPosition = rLayout.Add("Orientation [rad]", initialPose.Rotation().ToRotation2d().Radians().value()).GetEntry();
   nt_rSetpoint = rLayout.Add("Setpoint [rad]", 0.0).GetEntry();
   nt_rOutput = rLayout.Add("Output [radps]", 0.0).GetEntry();
-
-  m_poseEstimator = std::make_unique<frc::SwerveDrivePoseEstimator3d<4>>(
-    kDriveKinematics, m_ahrs->GetRotation3d(), GetModulePositions(), initialPose
-  );
 
   // Bind test init and test exit to mode transition
   frc2::RobotModeTriggers::Test()
@@ -92,9 +95,9 @@ DriveSubsystem::DriveSubsystem() :
 }
 
 void DriveSubsystem::Periodic() {
-  frc::Rotation3d heading = m_ahrs->GetRotation3d();
+  frc::Rotation3d heading = m_ahrs.GetRotation3d();
 
-  frc::Pose3d pose = m_poseEstimator->Update(heading, GetModulePositions());
+  frc::Pose3d pose = m_poseEstimator.Update(heading, GetModulePositions());
 
   // TODO: Add Limelight update?
 
@@ -144,7 +147,7 @@ void DriveSubsystem::TestExit() {
 }
 
 void DriveSubsystem::ResetFieldOrientation(bool inverted) {
-  m_poseEstimator->ResetPose(frc::Pose3d(GetPose().Translation(), inverted ? frc::Rotation3d(frc::Rotation2d(180_deg)) : frc::Rotation3d()));
+  m_poseEstimator.ResetPose(frc::Pose3d(GetPose().Translation(), inverted ? frc::Rotation3d(frc::Rotation2d(180_deg)) : frc::Rotation3d()));
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed, units::radians_per_second_t rot, bool fieldRelative, units::meter_t x_center, units::meter_t y_center) {
@@ -241,13 +244,13 @@ void DriveSubsystem::SetModuleStates(std::array<frc::SwerveModuleState, 4> desir
 }
 
 void DriveSubsystem::ResetPose(frc::Pose3d pose) {
-  m_poseEstimator->ResetPose(pose);
+  m_poseEstimator.ResetPose(pose);
 }
 
 frc::Pose3d DriveSubsystem::GetPose() {
-  return m_poseEstimator->GetEstimatedPosition();
+  return m_poseEstimator.GetEstimatedPosition();
 }
 
 void DriveSubsystem::UpdateVisionPose(frc::Pose3d measurement, units::millisecond_t timestamp) {
-  m_poseEstimator->AddVisionMeasurement(measurement, timestamp, {0.5, 0.5, 0.5, 0.8});
+  m_poseEstimator.AddVisionMeasurement(measurement, timestamp, {0.5, 0.5, 0.5, 0.8});
 }

@@ -12,7 +12,7 @@ constexpr auto kFallbackStrategy = photon::CLOSEST_TO_CAMERA_HEIGHT;
 
 VisionSubsystem::VisionSubsystem(std::function<frc::Pose3d()> accessor, std::function<void(frc::Pose3d, units::millisecond_t)> updater) :
     SubsystemBase("Vision Subsystem"),
-    m_camera{new photon::PhotonCamera{kName}},
+    m_camera{kName},
     m_poseEstimator{kAprilTags, photon::MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCam},
     m_accessor{accessor},
     m_updater{updater} {
@@ -45,7 +45,7 @@ void VisionSubsystem::Periodic() {
 }
 
 void VisionSubsystem::ProcessCameraResults(std::function<void(frc::Pose3d, units::millisecond_t)> updater) {
-  std::vector<photon::PhotonPipelineResult> camResults = m_camera->GetAllUnreadResults();
+  std::vector<photon::PhotonPipelineResult> camResults = m_camera.GetAllUnreadResults();
   for (auto camResult : camResults) {
     if (camResult.HasTargets()) {
       auto result = m_poseEstimator.Update(camResult);

@@ -135,10 +135,10 @@ private:
   std::unique_ptr<SwerveModule> rearRightModule;
 
   // The navX gyro sensor.
-  std::unique_ptr<studica::AHRS> m_ahrs;
+  studica::AHRS m_ahrs;
 
   // Pose estimator combines odometry with vision readings to yield an accurate robot pose; 4 specifies the number of modules.
-  std::unique_ptr<frc::SwerveDrivePoseEstimator3d<4>> m_poseEstimator;
+  frc::SwerveDrivePoseEstimator3d<4> m_poseEstimator;
 
   // Tuners to adjust PID values live from the dashboard; greatly increases the ease of tuning
   PIDTuner m_driveTuner;
